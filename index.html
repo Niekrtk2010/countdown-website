@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown to Birthday</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background-color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #countdown {
+      font-size: 3em;
+      color: black;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Countdown to My Birthday!</h1>
+  <div id="countdown">Loading...</div>
+  <canvas id="confetti"></canvas>
+
+  <script>
+    // Countdown Timer
+    const countdownElement = document.getElementById('countdown');
+    const targetDate = new Date('December 19, 2024 00:00:00').getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const timeLeft = targetDate - now;
+
+      if (timeLeft <= 0) {
+        countdownElement.innerHTML = "🎉 Happy Birthday! 🎉";
+        launchConfetti();
+        clearInterval(timerInterval);
+        return;
+      }
+
+      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+      countdownElement.innerHTML = `
+        ${days} days 
+        ${hours.toString().padStart(2, '0')} hours 
+        ${minutes.toString().padStart(2, '0')} minutes 
+        ${seconds.toString().padStart(2, '0')} seconds
+      `;
+    }
+
+    // Update every second
+    const timerInterval = setInterval(updateCountdown, 1000);
+    updateCountdown(); // Initial call to display the timer immediately
+
+    // Confetti Cannon
+    function launchConfetti() {
+      const confettiSettings = { target: 'confetti', max: 150, clock: 50 };
+      const confetti = new ConfettiGenerator(confettiSettings);
+      confetti.render();
+    }
+
+    // Load Confetti.js
+    (function() {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/confetti-js/dist/index.min.js';
+      script.onload = () => console.log('Confetti.js loaded');
+      document.head.appendChild(script);
+    })();
+  </script>
+</body>
+</html>
